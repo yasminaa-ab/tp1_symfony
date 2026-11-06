@@ -33,6 +33,9 @@
                         <h3 class="card-title h5 mb-3">
                             {{ categorie.nom }}
                         </h3>
+                        <a href="{{ path('app_categorie_detail', {id: categorie.id}) }}"
+                        class="btn btn-outline-primary btn-sm">Voir les détails
+                        </a>
 
                         {% if categorie.description %}
                             <p class="card-text text-muted small">
