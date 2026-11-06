@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Entity;
+//ajout tp2
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\CategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
