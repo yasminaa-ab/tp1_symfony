@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Controller;
+//ajout tp2
+use App\Form\ArticleType;
+use Symfony\Component\HttpFoundation\Request;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
@@ -12,21 +15,36 @@ use Symfony\Component\Routing\Attribute\Route;
 class ArticlesController extends AbstractController
 {
     // Exercice 4.1 : Ajouter un article
-    #[Route('/articles/nouveau', name: 'app_article_nouveau')]
-    public function nouveau(EntityManagerInterface $em): Response
-    {
-        $article = new Article();
+   #[Route('/articles/nouveau', name: 'app_article_nouveau')]
+    public function nouveau(Request $request, EntityManagerInterface $em): Response
+{
+    // Création d'un nouvel article
+    $article = new Article();
 
-        $article->setTitre('Mon premier article');
-        $article->setContenu('Ceci est le contenu de mon premier article créé avec Doctrine.');
-        $article->setAuteur('Étudiant');
-        $article->setDateCreation(new \DateTime());
-        $article->setPublie(true);
+    // Création du formulaire
+    $form = $this->createForm(ArticleType::class, $article);
 
+    // Traitement de la requête
+    $form->handleRequest($request);
+
+    // Vérification de la soumission et de la validité
+    if ($form->isSubmitted() && $form->isValid()) {
+
+        // Enregistrement dans la base de données
         $em->persist($article);
         $em->flush();
 
-        return new Response("Article créé avec l'id : " . $article->getId());
+        // Message de confirmation
+        $this->addFlash('success', 'Article créé avec succès !');
+
+        // Redirection vers la liste des articles
+        return $this->redirectToRoute('app_articles');
+    }
+
+    // Affichage du formulaire
+    return $this->render('articles/nouveau.html.twig', [
+        'formulaire' => $form,
+    ]);
     }
 
     // Exercice 4.2 : Lire les articles depuis la base de données
