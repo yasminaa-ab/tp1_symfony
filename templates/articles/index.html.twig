@@ -5,6 +5,13 @@
 {% block body %}
 
 <h1 class="mb-4">Articles (depuis la BDD)</h1>
+
+{% if is_granted('ROLE_USER') %}
+    <a href="{{ path('app_article_nouveau') }}" class="btn btn-primary mb-4">
+        ➕ Créer un article
+    </a>
+{% endif %}
+
 <form method="get" action="{{ path('app_articles') }}" class="mb-4">
     <div class="row align-items-end">
         <div class="col-md-6">
@@ -21,22 +28,27 @@
                 {% endfor %}
             </select>
         </div>
+
         <div class="col-md-3">
             <button type="submit" class="btn btn-primary">Filtrer</button>
             <a href="{{ path('app_articles') }}"class="btn btn-outline-secondary">
                 Réinitialiser
             </a>
         </div>
+
     </div>
 </form>
 
 {% if articles is empty %}
 
-    <div class="alert alert-info">
-        Aucun article en base de données.
-        <a href="{{ path('app_article_nouveau') }}" class="alert-link">
-            Créer un article
-        </a>
+    <div class="alert alert-info"> Aucun article en base de données.
+
+        {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('app_article_nouveau') }}" class="alert-link">
+                Créer un article
+            </a>
+{% endif %}
+
     </div>
 
 {% else %}
