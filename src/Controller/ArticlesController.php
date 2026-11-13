@@ -42,24 +42,30 @@ class ArticlesController extends AbstractController
     }
 
     // Lire les articles avec filtre par catégorie
-    #[Route('/articles', name: 'app_articles')]
-    public function index( Request $request,ArticleRepository $articleRepository,CategorieRepository $categorieRepository
+   #[Route('/articles', name: 'app_articles')]
+    public function index(
+    Request $request,
+    ArticleRepository $articleRepository,
+    CategorieRepository $categorieRepository
     ): Response {
-        $categorieId = $request->query->getInt('categorie');
-        if ($categorieId > 0) {
-            $articles = $articleRepository->findBy([
-                'categorie' => $categorieId,
-            ]);
-        } else {
-            $articles = $articleRepository->findAll();
-        }
-        $categories = $categorieRepository->findAll();
-        return $this->render('articles/index.html.twig', [
-            'articles' => $articles,
-            'categories' => $categories,
-            'categorieSelectionnee' => $categorieId,
-        ]);
+    $categorieParam = $request->query->get('categorie');
+    $categorieId = ctype_digit((string) $categorieParam)
+        ? (int) $categorieParam
+        : 0;
+    if ($categorieId > 0) {
+        $articles = $articleRepository->findBy([
+            'categorie' => $categorieId,
+        ]);                                   
+    } else {
+        $articles = $articleRepository->findAll();
     }
+    $categories = $categorieRepository->findAll();
+    return $this->render('articles/index.html.twig', [
+        'articles' => $articles,
+        'categories' => $categories,
+        'categorieSelectionnee' => $categorieId,
+    ]);
+}
     // Afficher un article
     #[Route('/articles/{id}', name: 'app_article_detail', requirements: ['id' => '\d+'])]
     public function detail(Article $article): Response {
