@@ -19,6 +19,18 @@
 <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        {% if app.user %}
+            <span class="navbar-text me-3">
+            👤 {{ app.user.pseudo }}
+        </span>
+        <a href="{{ path('app_logout') }}" class="nav-link">Déconnexion</a>
+
+        {% else %}
+            <a href="{{ path('app_login') }}" class="nav-link">Connexion</a>
+            <a href="{{ path('app_register') }}" class="nav-link">Inscription</a>
+
+        {% endif %}
+
 
         <div class="container">
 
